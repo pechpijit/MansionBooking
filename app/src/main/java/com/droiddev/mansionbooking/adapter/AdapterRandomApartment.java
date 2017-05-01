@@ -19,6 +19,7 @@ import com.like.LikeButton;
 import com.like.OnLikeListener;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class AdapterRandomApartment extends RecyclerView.Adapter<AdapterRandomApartment.VersionViewHolder> {
     ArrayList<ModelPostHome> posts;
@@ -27,7 +28,7 @@ public class AdapterRandomApartment extends RecyclerView.Adapter<AdapterRandomAp
     Context context;
     OnItemClickListener clickListener;
 
-    public AdapterRandomApartment(Activity applicationContext, ArrayList posts,String url) {
+    public AdapterRandomApartment(Activity applicationContext, ArrayList posts, String url) {
         this.context = applicationContext;
         this.posts = posts;
         this.url = url;
@@ -79,12 +80,16 @@ public class AdapterRandomApartment extends RecyclerView.Adapter<AdapterRandomAp
                         .centerCrop()
                         .error(R.drawable.nopic)
                         .into(versionViewHolder.img1);
-                Glide.with(context)
-                        .load(url+"/images/build/"+posts.get(i).getImage().get(1).getImage())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .error(R.drawable.nopic)
-                        .into(versionViewHolder.img2);
+                try {
+                    Glide.with(context)
+                            .load(url+"/images/build/"+posts.get(i).getImage().get(1).getImage())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .centerCrop()
+                            .error(R.drawable.nopic)
+                            .into(versionViewHolder.img2);
+                } catch (Exception e) {
+
+                }
                 break;
             case 3:
                 Glide.with(context)
@@ -93,18 +98,26 @@ public class AdapterRandomApartment extends RecyclerView.Adapter<AdapterRandomAp
                         .centerCrop()
                         .error(R.drawable.nopic)
                         .into(versionViewHolder.img1);
-                Glide.with(context)
-                        .load(url+"/images/build/"+posts.get(i).getImage().get(1).getImage())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .error(R.drawable.nopic)
-                        .into(versionViewHolder.img2);
-                Glide.with(context)
-                        .load(url+"/images/build/"+posts.get(i).getImage().get(2).getImage())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .error(R.drawable.nopic)
-                        .into(versionViewHolder.img3);
+                try {
+                    Glide.with(context)
+                            .load(url+"/images/build/"+posts.get(i).getImage().get(1).getImage())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .centerCrop()
+                            .error(R.drawable.nopic)
+                            .into(versionViewHolder.img2);
+                } catch (Exception e) {
+
+                }
+                try {
+                    Glide.with(context)
+                            .load(url + "/images/build/" + posts.get(i).getImage().get(2).getImage())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .centerCrop()
+                            .error(R.drawable.nopic)
+                            .into(versionViewHolder.img3);
+                } catch (Exception e) {
+
+                }
                 break;
         }
 

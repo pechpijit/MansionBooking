@@ -23,6 +23,6 @@
     <tab
         id="@+id/tab_user"
         icon="@drawable/ic_person_white_24dp"
-        title="User info"
+        title="Account"
         barColorWhenSelected="@color/menu5" />
 </tabs>

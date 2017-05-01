@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/cod_active"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:hint="รหัสผ่านยืนยันการเชื่อมข้อมูล"/>
+
+    <mehdi.sakout.fancybuttons.FancyButton
+        android:id="@+id/btn_active"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        fancy:fb_iconPaddingRight="10dp"
+        fancy:fb_defaultColor="@color/btn_back"
+        fancy:fb_focusColor="@color/colorPrimary"
+        fancy:fb_iconPosition="left"
+        fancy:fb_radius="30dp"
+        fancy:fb_text="ยืนยันการเชื่อมต่อข้อมูล"
+        fancy:fb_textColor="#FFFFFF"
+        android:layout_margin="5dp" />
+</LinearLayout>

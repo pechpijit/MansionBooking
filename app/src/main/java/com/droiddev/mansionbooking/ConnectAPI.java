@@ -16,8 +16,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ConnectAPI {
-//    String URL = "http://192.168.1.42/MansionBooking/public";
-    String URL = "http://aof.commsk.com";
+    String URL = "http://192.168.1.50/MansionBooking/public";
+//    String URL = "http://aof.commsk.com";
 
     public void Register(
             final Activity context,
@@ -284,7 +284,101 @@ public class ConnectAPI {
                 if (temp[0].equals("Error") || temp[0].equals("Not")) {
                     dialogErrorNoIntent(context, string);
                 } else {
-                    ((HomeActivity) context).setFram(string,"1");
+                    ((HomeActivity) context).setFram(string,page);
+                }
+            }
+        }.execute();
+    }
+
+    public void apartmentUsrapp(final Activity context, final String ID , final String page) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                OkHttpClient client = new OkHttpClient();
+
+                Request request = new Request.Builder()
+                        .url(URL+"/api/usr/apartment/"+ID)
+                        .get()
+                        .addHeader("cache-control", "no-cache")
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        return response.body().string();
+                    } else {
+                        return "Not Success - code : " + response.code();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "Error - " + e.getMessage();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String string) {
+                super.onPostExecute(string);
+                Log.d("ConnectAPI : ", "apartmentRandom " + string);
+                String[] temp = string.split(" ");
+                if (temp[0].equals("Error") || temp[0].equals("Not")) {
+                    dialogErrorNoIntent(context, string);
+                } else if (string.equals("NotFound")) {
+                    dialogError(context, string);
+                    NoApart(context);
+                }  else {
+                    ((HomeActivity) context).setFram(string,page);
+                }
+            }
+        }.execute();
+    }
+
+    public void ActiveCustomer(final Activity context,final String ID,final String Code) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                OkHttpClient client = new OkHttpClient();
+
+                MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+                RequestBody body = RequestBody.create(mediaType, "usrapp_id="+ID+"&CodeContext="+Code);
+                Request request = new Request.Builder()
+                        .url(URL+"/api/activecustomer")
+                        .post(body)
+                        .addHeader("content-type", "application/x-www-form-urlencoded")
+                        .addHeader("cache-control", "no-cache")
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        return response.body().string();
+                    } else {
+                        return "Not Success - code : " + response.code();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "Error - " + e.getMessage();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String string) {
+                super.onPostExecute(string);
+                Log.d("ConnectAPI : ", "SocialLogin " + string);
+                String[] temp = string.split(" ");
+                if (temp[0].equals("Error") || temp[0].equals("Not")) {
+                    dialogErrorNoIntent(context, string);
+                    ((HomeActivity) context).onActiveFailed();
+                }  else if (string.equals("Activealready")) {
+                    ActiveError3(context);
+                    ((HomeActivity) context).onActiveFailed();
+                }  else if (string.equals("NotFound")) {
+                    ActiveError2(context);
+                    ((HomeActivity) context).onActiveFailed();
+                }  else if (string.equals("already")) {
+                    ActiveError1(context);
+                    ((HomeActivity) context).onActiveFailed();
+                } else {
+                    ((HomeActivity) context).onActiveSuccess();
                 }
             }
         }.execute();
@@ -292,11 +386,44 @@ public class ConnectAPI {
 
     private static void dialogError(final Activity context, String string) {
         new AlertDialog.Builder(context)
-                .setTitle("Not Found")
+                .setTitle("Failed")
                 .setMessage("ไม่พบข้อมูล กรุณาลองใหม่ภายหลัง error code = " + string)
                 .setNegativeButton("OK", null)
                 .show();
     }
+
+    private static void NoApart(final Activity context) {
+        new AlertDialog.Builder(context)
+                .setTitle("Failed")
+                .setMessage("ขออภัย ท่านยังไม่มีหอพัก หรือกรุณาลองใหม่อีกครั้ง")
+                .setNegativeButton("OK", null)
+                .show();
+    }
+
+    private static void ActiveError1(final Activity context) {
+        new AlertDialog.Builder(context)
+                .setTitle("Failed")
+                .setMessage("ขออภัย ท่านไม่สามารถส่งซ้ำได้")
+                .setNegativeButton("OK", null)
+                .show();
+    }
+
+    private static void ActiveError2(final Activity context) {
+        new AlertDialog.Builder(context)
+                .setTitle("Failed")
+                .setMessage("ขออภัย รหัสยืนยันไม่ถูกต้องกรุณาลองใหม่อีกครั้ง")
+                .setNegativeButton("OK", null)
+                .show();
+    }
+
+    private static void ActiveError3(final Activity context) {
+        new AlertDialog.Builder(context)
+                .setTitle("Failed")
+                .setMessage("ขออภัย รหัสยืนยันถูกใช้งานแล้ว")
+                .setNegativeButton("OK", null)
+                .show();
+    }
+
 
     private static void dialogErrorNoIntent(final Activity context, String string) {
         new AlertDialog.Builder(context)

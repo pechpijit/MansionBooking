@@ -135,6 +135,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             String refreshedToken = FirebaseInstanceId.getInstance().getToken();
             new ConnectAPI().SocialLogin(SplashActivity.this, acct.getId(), refreshedToken);
         } else {
+            signInButton.setEnabled(true);
             Toast.makeText(SplashActivity.this, "handleSignInResult : "+result.isSuccess(), Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
         }

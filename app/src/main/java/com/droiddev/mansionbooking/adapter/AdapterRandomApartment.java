@@ -28,7 +28,7 @@ public class AdapterRandomApartment extends RecyclerView.Adapter<AdapterRandomAp
     Context context;
     OnItemClickListener clickListener;
 
-    public AdapterRandomApartment(Activity applicationContext, ArrayList posts, String url) {
+    public AdapterRandomApartment(Activity applicationContext, ArrayList<ModelPostHome> posts, String url) {
         this.context = applicationContext;
         this.posts = posts;
         this.url = url;
@@ -36,18 +36,18 @@ public class AdapterRandomApartment extends RecyclerView.Adapter<AdapterRandomAp
 
     @Override
     public VersionViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
-        View view = null;
+        View view = LayoutInflater.from(context).inflate(R.layout.adapter_random_apartment, viewGroup, false);
         switch (posts.get(i).getImage().size()) {
             case 1:
                 Log.d("AdapterRandomApartment", "1");
                 view = LayoutInflater.from(context).inflate(R.layout.adapter_random_apartment, viewGroup, false);
                 break;
             case 2:
-                Log.d("AdapterRandomApartment", "1");
+                Log.d("AdapterRandomApartment", "2");
                 view = LayoutInflater.from(context).inflate(R.layout.adapter_random_apartment_tow, viewGroup, false);
                 break;
             case 3:
-                Log.d("AdapterRandomApartment", "1");
+                Log.d("AdapterRandomApartment", "3");
                 view = LayoutInflater.from(context).inflate(R.layout.adapter_random_apartment_three, viewGroup, false);
                 break;
         }
@@ -60,9 +60,16 @@ public class AdapterRandomApartment extends RecyclerView.Adapter<AdapterRandomAp
     public void onBindViewHolder(final VersionViewHolder versionViewHolder, final int i) {
         versionViewHolder.txt_name.setText(posts.get(i).getName());
         versionViewHolder.txt_phone.setText("Tel: "+posts.get(i).getPhone());
-        versionViewHolder.txt_email.setText("Email: "+posts.get(i).getElect());
+        versionViewHolder.txt_email.setText("Email: "+posts.get(i).getEmail());
         versionViewHolder.txt_address.setText(posts.get(i).getAddress());
-        versionViewHolder.txtPrice.setText("ราคาโดยเฉลี่ย : "+posts.get(i).getPrice().getMin()+"-"+posts.get(i).getPrice().getMax());
+
+        if (posts.get(i).getPrice().getMin() == null || posts.get(i).getPrice().getMax() == null) {
+            versionViewHolder.txtPrice.setText("ราคาโดยเฉลี่ย : ยังไม่มีการกำหนดราคา");
+        } else {
+            versionViewHolder.txtPrice.setText("ราคาโดยเฉลี่ย : "+posts.get(i).getPrice().getMin()+"-"+posts.get(i).getPrice().getMax());
+        }
+
+
 
         switch (posts.get(i).getImage().size()) {
             case 1:
@@ -136,8 +143,7 @@ public class AdapterRandomApartment extends RecyclerView.Adapter<AdapterRandomAp
 
     @Override
     public int getItemCount() {
-
-        return posts.size();
+        return posts.isEmpty() ?0:posts.size();
     }
 
     class VersionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

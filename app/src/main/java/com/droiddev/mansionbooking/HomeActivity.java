@@ -151,17 +151,17 @@ public class HomeActivity extends AppCompatActivity {
 
         switch (page) {
             case "1":
-                fab.setVisibility(View.INVISIBLE);
+                fab.hide();
                 Log.d("HomeActivity", "setFram 1");
                 selectFragment = new PostHomeFragment().newInstance(s,url);
                 break;
             case "3":
-                fab.setVisibility(View.INVISIBLE);
+                fab.hide();
                 Log.d("HomeActivity", "setFram 3");
                 selectFragment = new com.droiddev.mansionbooking.fragment.MapFragment();
                 break;
             case "5":
-                fab.setVisibility(View.VISIBLE);
+                fab.show();
                 selectFragment = new AccountFragment().newInstance(s,url);
                 break;
         }

@@ -9,6 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import mehdi.sakout.fancybuttons.FancyButton;

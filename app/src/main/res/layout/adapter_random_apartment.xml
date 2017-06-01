@@ -1,77 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardlist_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardCornerRadius="3dp"
-    card_view:cardElevation="5dp"
-    card_view:cardBackgroundColor="@color/white"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_margin="5dp"
     android:layout_marginBottom="5dp"
-    android:layout_margin="10dp"
-    android:padding="5dp">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:orientation="horizontal"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="3dp"
+    card_view:cardElevation="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:gravity="center_vertical"
         android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:paddingRight="8dp"
+        android:paddingTop="8dp">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txt_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="SSRU HOTEL"
-                    android:id="@+id/txt_name"
+                    android:textColor="@color/amber_dark"
                     android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/amber_dark" />
+                    android:textStyle="bold" />
 
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/txt_phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tel : 0614496148"
-                        android:id="@+id/txt_phone" />
+                        android:text="Tel : 0614496148" />
 
                     <TextView
+                        android:id="@+id/txt_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Email : pechy.line@gmail.com"
-                        android:id="@+id/txt_email"
-                        android:layout_marginLeft="10dp" />
+                        android:layout_marginLeft="10dp"
+                        android:text="Email : pechy.line@gmail.com" />
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/txt_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ตำบลบางพลี อำเภอบางไทร จังหวัดพระนครศรีอยุธยา 13190"
-                    android:id="@+id/txt_address" />
+                    android:text="ตำบลบางพลี อำเภอบางไทร จังหวัดพระนครศรีอยุธยา 13190" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/black_overlay"
-                    android:layout_marginTop="5dp"></FrameLayout>
+                    android:layout_marginTop="5dp"
+                    android:background="@color/black_overlay"></FrameLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -79,63 +77,55 @@
                     android:layout_marginTop="5dp">
 
                     <ImageView
-                        android:scaleType="centerCrop"
+                        android:id="@+id/image1"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
-                        android:id="@+id/image1"
-                        android:src="@drawable/back1" />
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/noimage" />
 
                     <FrameLayout
-                        android:background="@color/black_overlay"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
-                        android:layout_gravity="bottom">
+                        android:layout_gravity="bottom"
+                        android:background="@color/black_overlay">
 
                         <TextView
+                            android:id="@+id/txtPrice"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="New Text"
-                            android:id="@+id/txtPrice"
                             android:layout_gravity="center_vertical"
                             android:layout_margin="5dp"
+                            android:text="New Text"
                             android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="18dp" />
+                            android:textSize="18dp"
+                            android:textStyle="bold" />
                     </FrameLayout>
                 </FrameLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/black_overlay"
-                    android:layout_marginTop="5dp" >
+                    android:layout_marginTop="5dp"
+                    android:background="@color/black_overlay">
 
                 </FrameLayout>
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp">
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal">
+
                     <com.like.LikeButton
-                        app:liked="true"
                         android:id="@+id/startButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        app:icon_size="22dp"
-                        app:icon_type="star" />
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        app:icon_size="20dp"
+                        app:icon_type="star"
+                        app:liked="false" />
                 </LinearLayout>
 
             </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp">
-
-            </LinearLayout>
         </FrameLayout>
-
     </LinearLayout>
-
 </android.support.v7.widget.CardView>

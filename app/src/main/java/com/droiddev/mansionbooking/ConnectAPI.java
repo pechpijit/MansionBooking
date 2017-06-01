@@ -7,6 +7,10 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.droiddev.mansionbooking.model.ModelPostHome;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 
 import okhttp3.MediaType;

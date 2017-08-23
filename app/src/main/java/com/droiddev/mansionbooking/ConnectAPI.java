@@ -20,7 +20,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ConnectAPI {
-    String URL = "http://192.168.1.51/MansionBooking/public";
+    public static String URL = "http://192.168.1.190/MansionBooking/public";
 //    String URL = "http://aof.commsk.com";
 
     public void Register(

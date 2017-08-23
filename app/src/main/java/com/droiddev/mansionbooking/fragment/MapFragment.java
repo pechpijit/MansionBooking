@@ -1,22 +1,33 @@
 package com.droiddev.mansionbooking.fragment;
-import android.Manifest;
+
+import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.AttributeSet;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-
+import com.bumptech.glide.Glide;
+import com.droiddev.mansionbooking.ConnectAPI;
+import com.droiddev.mansionbooking.HomeActivity;
 import com.droiddev.mansionbooking.R;
+import com.droiddev.mansionbooking.model.ModelDetailMap;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,31 +37,30 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener,
-        ActivityCompat.OnRequestPermissionsResultCallback{
-
-    private static final LatLng b1 = new LatLng(13.6594121, 100.599031);
-    private static final LatLng b2 = new LatLng(13.6594121, 100.599031);
-    private static final LatLng b3 = new LatLng(13.6728759, 100.6051552);
-    private static final LatLng b4 = new LatLng(13.6821736, 100.6067373);
-    private static final LatLng b5 = new LatLng(13.691347, 100.6025014);
-    private static final LatLng b6 = new LatLng(13.7068666, 100.593213);
-    private static final LatLng b7 = new LatLng(13.7117256, 100.5888495);
-    private static final LatLng b8 = new LatLng(13.7154937, 100.5820363);
-
-    private static LatLng b9 = new LatLng(13.7154937, 100.5820363);
-
+        ActivityCompat.OnRequestPermissionsResultCallback {
     private Marker mPerth;
-    private Marker mSydney;
-    private Marker mBrisbane;
-    SupportMapFragment fragment;
-    LatLng loc;
+    Context mContext;
+    int ID;
+    ArrayList<ModelDetailMap> post;
+    String TAG = "MapFragment";
+
     public MapFragment() {
         // Required empty public constructor
     }
@@ -61,6 +71,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        mContext = getActivity();
         return view;
     }
 
@@ -74,107 +85,161 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         final GoogleMap mMap = googleMap;
+        getMapAll(getActivity(), mMap, ID);
+    }
 
-        // Add some markers to the map, and add a data object to each marker.
-        mPerth = mMap.addMarker(new MarkerOptions()
-                .position(b1)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                .title("สถานี BTS"));
-        mPerth.setTag(0);
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
 
-        mPerth = mMap.addMarker(new MarkerOptions()
-                .position(b2)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                .title("สถานี BTS"));
-        mPerth.setTag(1);
+        Integer id = (Integer) marker.getTag();
 
-        mPerth = mMap.addMarker(new MarkerOptions()
-                .position(b3)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                .title("สถานี BTS"));
-        mPerth.setTag(2);
-
-        mPerth = mMap.addMarker(new MarkerOptions()
-                .position(b4)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                .title("สถานี BTS"));
-        mPerth.setTag(3);
-
-        mPerth = mMap.addMarker(new MarkerOptions()
-                .position(b5)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                .title("สถานี BTS"));
-        mPerth.setTag(4);
-
-        mPerth = mMap.addMarker(new MarkerOptions()
-                .position(b6)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                .title("สถานี BTS"));
-        mPerth.setTag(5);
-
-        mSydney = mMap.addMarker(new MarkerOptions()
-                .position(b7)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                .title("สถานี BTS"));
-        mSydney.setTag(6);
-
-        mBrisbane = mMap.addMarker(new MarkerOptions()
-                .position(b8)
-//                .ic_launcher(BitmapDescriptorFactory.fromResource(R.drawable.cpu2))
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                .title("สถานี BTS"));
-        mBrisbane.setTag(7);
+        Log.i(TAG, "id : " + id);
+        for (int i = 0; i < post.size(); i++) {
+            if (id == post.get(i).getId()) {
+                dialogDetailMarker(getActivity(), "รายระเอียด", "ชื่อหอพัก :" + post.get(i).getName()+
+                "\nที่อยู่ :"+post.get(i).getAddress()+
+                "\nอีเมล์ :"+post.get(i).getEmail()+
+                "\nเบอร์โทรศัพท์ :"+post.get(i).getPhone());
+                break;
+            }
+        }
 
 
+        return false;
+    }
+
+    public void addMarker(GoogleMap mMap, String string, String url) {
+        Gson gson = new Gson();
+        Type collectionType = new TypeToken<Collection<ModelDetailMap>>() {
+        }.getType();
+        Collection<ModelDetailMap> enums = gson.fromJson(string, collectionType);
+        post = new ArrayList<ModelDetailMap>(enums);
+
+        LatLng Position = null;
+        int lastIndex = 0;
+        for (ModelDetailMap contentModel : post) {
+            mPerth = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(Double.parseDouble(contentModel.getLatitude()), Double.parseDouble(contentModel.getLongitude())))
+//                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                    .icon((BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(url + "/images_resize/build/" + contentModel.getImage())))));
+//                    .title(contentModel.getName()));
+
+            mPerth.setTag(contentModel.getId());
+            if (lastIndex == 0) {
+                Position = new LatLng(Double.parseDouble(contentModel.getLatitude()), Double.parseDouble(contentModel.getLongitude()));
+                lastIndex++;
+            }
+        }
+        mMap.getUiSettings().setZoomControlsEnabled(true);
         // Set a listener for marker click.
         mMap.setOnMarkerClickListener(this);
-        googleMap.setBuildingsEnabled(true);
+        mMap.setBuildingsEnabled(true);
+
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(13.6594121, 100.599031)).zoom(11).build(); // เอาไว้ Fix Location
-        googleMap.animateCamera(CameraUpdateFactory
+                .target(Position).zoom(11).build(); // เอาไว้ Fix Location
+        mMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));//แบบมี Animation
 //        googleMap.getUiSettings().setScrollGesturesEnabled(false);
 //        ปิดไม่ให้เลื่อน map
 //        googleMap.setMapType(com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE);// แบบจริง
 //        googleMap.setMapType(com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN);//แบบภาพวาด
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
 
-        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
+//        mMap.setInfoWindowAdapter(new MyInfoWindowAdapter());
+//        mMap.setInfoWindowAdapter(new MapInfoWindowAdapter(this, markerSet));
     }
 
-    /**
-     * Called when the user clicks a marker.
-     */
-    @Override
-    public boolean onMarkerClick(final Marker marker) {
+    private Bitmap getMarkerBitmapFromView(final String url) {
 
-        // Retrieve the data from the marker.
-        Integer clickCount = (Integer) marker.getTag();
+        View customMarkerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_marker, null);
+        ImageView markerImageView = (ImageView) customMarkerView.findViewById(R.id.avatar_marker_image_view);
 
-        // Check if a click count was set, then display the click count.
-        if (clickCount != null) {
-            clickCount = clickCount + 1;
-            marker.setTag(clickCount);
-            Toast.makeText(getActivity(),
-                    marker.getTitle() +
-                            " has been clicked " + clickCount + " times.",
-                    Toast.LENGTH_SHORT).show();
-        }
+        Picasso.with(mContext).load(url).error(R.drawable.nopic).into(markerImageView);
+        Picasso.with(mContext).load(url).error(R.drawable.nopic).into(markerImageView);
+//        Glide.with(mContext).load(url).error(R.drawable.nopic).into(markerImageView);
+//        Glide.with(mContext).load(url).error(R.drawable.nopic).into(markerImageView);
+        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
+        customMarkerView.buildDrawingCache();
+        Bitmap returnedBitmap = Bitmap.createBitmap(customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        Drawable drawable = customMarkerView.getBackground();
+        if (drawable != null)
+            drawable.draw(canvas);
+        customMarkerView.draw(canvas);
+        return returnedBitmap;
+    }
 
-        // Return false to indicate that we have not consumed the event and that we wish
-        // for the default behavior to occur (which is for the camera to move such that the
-        // marker is centered and for the marker's info window to open, if it has one).
-        return false;
+    public void getMapAll(final FragmentActivity activity, final GoogleMap mMap, int ID) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                OkHttpClient client = new OkHttpClient();
+
+                Request request = new Request.Builder()
+                        .url(ConnectAPI.URL + "/api/apartment/getmap")
+                        .get()
+                        .addHeader("cache-control", "no-cache")
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        return response.body().string();
+                    } else {
+                        return "Not Success - code : " + response.code();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "Error - " + e.getMessage();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String string) {
+                super.onPostExecute(string);
+                Log.d("ConnectAPI : ", "apartmentRandom " + string);
+                String[] temp = string.split(" ");
+                if (temp[0].equals("Error") || temp[0].equals("Not")) {
+                    dialogErrorNoIntent(activity, string);
+                } else if (string.equals("NotFound")) {
+                    dialogError(activity, string);
+                } else {
+                    addMarker(mMap, string, ConnectAPI.URL);
+                }
+            }
+        }.execute();
+    }
+
+    private static void dialogError(final Activity context, String string) {
+        new AlertDialog.Builder(context)
+                .setTitle("Failed")
+                .setMessage("ไม่พบข้อมูล กรุณาลองใหม่ภายหลัง error code = " + string)
+                .setNegativeButton("OK", null)
+                .show();
+    }
+
+    private static void dialogErrorNoIntent(final Activity context, String string) {
+        new AlertDialog.Builder(context)
+                .setTitle("The system temporarily")
+                .setMessage("ไม่สามารถเข้าใช้งานได้ กรุณาลองใหม่ภายหลัง error code = " + string)
+                .setNegativeButton("OK", null)
+                .show();
+    }
+
+    private void dialogDetailMarker(final Activity context, String title, String detail) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(detail)
+                .setNegativeButton("ดูข้อมูล", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setPositiveButton("ปิด", null)
+                .show();
     }
 
 }

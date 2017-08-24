@@ -1,11 +1,13 @@
 package com.droiddev.mansionbooking;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.droiddev.mansionbooking.model.ModelPostHome;
 import com.google.gson.Gson;
@@ -20,7 +22,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ConnectAPI {
-    public static String URL = "http://192.168.1.190/MansionBooking/public";
+    public static String URL = "http://192.168.1.51/MansionBooking/public";
 //    String URL = "http://aof.commsk.com";
 
     public void Register(
@@ -336,6 +338,91 @@ public class ConnectAPI {
         }.execute();
     }
 
+
+    public void userLikePost(final Context context, final int user_id , final int post_id) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                OkHttpClient client = new OkHttpClient();
+
+                MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+                RequestBody body = RequestBody.create(mediaType, "userapp_id="+user_id+"&post_id="+post_id);
+                Request request = new Request.Builder()
+                        .url(URL+"/api/userapplike")
+                        .post(body)
+                        .addHeader("content-type", "application/x-www-form-urlencoded")
+                        .addHeader("cache-control", "no-cache")
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        return response.body().string();
+                    } else {
+                        return "Not Success - code : " + response.code();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "Error - " + e.getMessage();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String string) {
+                super.onPostExecute(string);
+                Log.d("ConnectAPI : ", "userLikePost " + string);
+                String[] temp = string.split(" ");
+                if (temp[0].equals("Error") || temp[0].equals("Not")) {
+                    dialogErrorNoIntent(context, string);
+                } else if (string.equals("success")){
+                    Toast.makeText(context, "Like Success", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.execute();
+    }
+
+    public void userUnLikePost(final Context context, final int user_id , final int post_id) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                OkHttpClient client = new OkHttpClient();
+
+                MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+                RequestBody body = RequestBody.create(mediaType, "userapp_id="+user_id+"&post_id="+post_id);
+                Request request = new Request.Builder()
+                        .url(URL+"/api/userappunlike")
+                        .post(body)
+                        .addHeader("content-type", "application/x-www-form-urlencoded")
+                        .addHeader("cache-control", "no-cache")
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        return response.body().string();
+                    } else {
+                        return "Not Success - code : " + response.code();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "Error - " + e.getMessage();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String string) {
+                super.onPostExecute(string);
+                Log.d("ConnectAPI : ", "userUnLikePost " + string);
+                String[] temp = string.split(" ");
+                if (temp[0].equals("Error") || temp[0].equals("Not")) {
+                    dialogErrorNoIntent(context, string);
+                } else if (string.equals("success")){
+                    Toast.makeText(context, "UnLike Success", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.execute();
+    }
+
     public void ActiveCustomer(final Activity context,final String ID,final String Code) {
         new AsyncTask<Void, Void, String>() {
             @Override
@@ -429,7 +516,7 @@ public class ConnectAPI {
     }
 
 
-    private static void dialogErrorNoIntent(final Activity context, String string) {
+    private static void dialogErrorNoIntent(final Context context, String string) {
         new AlertDialog.Builder(context)
                 .setTitle("The system temporarily")
                 .setMessage("ไม่สามารถเข้าใช้งานได้ กรุณาลองใหม่ภายหลัง error code = " + string)

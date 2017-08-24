@@ -81,7 +81,9 @@ public class PostHomeFragment extends Fragment {
         Collection<ModelPostHome> enums = gson.fromJson(data, collectionType);
          final ArrayList<ModelPostHome> posts = new ArrayList<ModelPostHome>(enums);
 
-        adapter = new AdapterRandomApartment(getActivity(), posts,url);
+        SharedPreferences sp = getActivity().getSharedPreferences("Preferences_MansionBooking", Context.MODE_PRIVATE);
+
+        adapter = new AdapterRandomApartment(getActivity(), posts,url,sp.getInt("id",0));
         recyclerView.setAdapter(adapter);
 
         adapter.SetOnItemClickListener(new AdapterRandomApartment.OnItemClickListener() {

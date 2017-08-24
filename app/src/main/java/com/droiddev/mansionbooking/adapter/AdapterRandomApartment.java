@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.droiddev.mansionbooking.ConnectAPI;
 import com.droiddev.mansionbooking.R;
 import com.droiddev.mansionbooking.model.ModelPostHome;
 import com.like.LikeButton;
@@ -27,11 +28,13 @@ public class AdapterRandomApartment extends RecyclerView.Adapter<AdapterRandomAp
 
     Context context;
     OnItemClickListener clickListener;
+    int User_id = 0;
 
-    public AdapterRandomApartment(Activity applicationContext, ArrayList<ModelPostHome> posts, String url) {
+    public AdapterRandomApartment(Activity applicationContext, ArrayList<ModelPostHome> posts, String url, int id) {
         this.context = applicationContext;
         this.posts = posts;
         this.url = url;
+        this.User_id = id;
     }
 
     @Override
@@ -62,6 +65,19 @@ public class AdapterRandomApartment extends RecyclerView.Adapter<AdapterRandomAp
         versionViewHolder.txt_phone.setText("Tel: "+posts.get(i).getPhone());
         versionViewHolder.txt_email.setText("Email: "+posts.get(i).getEmail());
         versionViewHolder.txt_address.setText(posts.get(i).getAddress());
+
+        versionViewHolder.startButton.setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(LikeButton likeButton) {
+                Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                new ConnectAPI().userLikePost(context,User_id,posts.get(i).getId());
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                new ConnectAPI().userUnLikePost(context,User_id,posts.get(i).getId());
+            }
+        });
 
         if (posts.get(i).getPrice().getMin() == null || posts.get(i).getPrice().getMax() == null) {
             versionViewHolder.txtPrice.setText("ราคาโดยเฉลี่ย : ยังไม่มีการกำหนดราคา");
